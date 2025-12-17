@@ -11,6 +11,7 @@ import {
   Users,
   Menu,
   X,
+  Bot,
   TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -38,9 +39,9 @@ export function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center shadow-glow-sm">
-              <TrendingUp className="w-6 h-6 text-primary-foreground" />
+              <Bot className="w-6 h-6 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold gradient-text hidden sm:block">IR Agent</span>
+            <span className="text-xl font-bold gradient-text hidden sm:block">Agentic AutoAI</span>
           </Link>
 
           {/* Desktop Navigation */}
