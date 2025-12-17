@@ -5,56 +5,56 @@ import {
   TrendingUp, 
   Shield, 
   Zap, 
-  DollarSign,
+  Car,
   CheckCircle,
   ArrowRight,
-  BarChart3,
+  Wrench,
   Users,
   Clock,
-  Globe,
+  Settings,
   Bot
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { companyData } from '@/contexts/AppContext';
+import { serviceData } from '@/contexts/AppContext';
 
 const stats = [
-  { label: 'Faster Response', value: '96%', icon: Zap, color: 'text-primary' },
-  { label: 'Annual Savings', value: '$500K', icon: DollarSign, color: 'text-success' },
-  { label: 'Compliance Rate', value: '100%', icon: CheckCircle, color: 'text-secondary' },
+  { label: 'Faster Diagnostics', value: '85%', icon: Zap, color: 'text-primary' },
+  { label: 'Cost Reduction', value: '40%', icon: Car, color: 'text-success' },
+  { label: 'Customer Satisfaction', value: '98%', icon: CheckCircle, color: 'text-secondary' },
 ];
 
 const features = [
   {
     icon: MessageSquare,
-    title: 'Smart Query Engine',
-    description: 'AI-powered responses to investor queries with real-time data access and citation.',
+    title: 'Smart Diagnostics',
+    description: 'AI-powered vehicle diagnostics with real-time fault code analysis and repair recommendations.',
     gradient: 'from-primary to-primary/60',
   },
   {
     icon: FileText,
-    title: 'Auto Report Generation',
-    description: 'Generate comprehensive quarterly reports, ESG summaries, and investor updates.',
+    title: 'Auto Service Reports',
+    description: 'Generate comprehensive service reports, maintenance schedules, and cost estimates instantly.',
     gradient: 'from-secondary to-secondary/60',
   },
   {
     icon: TrendingUp,
-    title: 'Sentiment Monitoring',
-    description: 'Real-time tracking of market sentiment, news mentions, and analyst ratings.',
+    title: 'Customer Insights',
+    description: 'Real-time tracking of customer satisfaction, service reviews, and feedback analysis.',
     gradient: 'from-success to-success/60',
   },
   {
     icon: Shield,
-    title: 'Compliance Checker',
-    description: 'Automated screening for Reg FD, MNPI, and forward-looking statement compliance.',
+    title: 'Safety Compliance',
+    description: 'Automated safety inspection checklists and regulatory compliance verification.',
     gradient: 'from-warning to-warning/60',
   },
 ];
 
 const metrics = [
-  { icon: BarChart3, label: 'Queries Handled', value: '10,000+' },
-  { icon: Users, label: 'Active Investors', value: '2,500+' },
-  { icon: Clock, label: 'Avg. Response Time', value: '<2 sec' },
-  { icon: Globe, label: 'Global Coverage', value: '24/7' },
+  { icon: Wrench, label: 'Services Completed', value: '12,500+' },
+  { icon: Users, label: 'Happy Customers', value: '8,000+' },
+  { icon: Clock, label: 'Avg. Service Time', value: '<2 hrs' },
+  { icon: Settings, label: 'Parts Available', value: '50,000+' },
 ];
 
 export default function Index() {
@@ -77,15 +77,15 @@ export default function Index() {
             </div>
             
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 animate-fade-in stagger-1">
-              Transform Investor Relations
+              AI-Powered Vehicle Service
               <span className="block mt-2 bg-gradient-to-r from-primary-foreground via-primary-foreground/80 to-primary-foreground bg-clip-text">
-                From Reactive to Proactive
+                Intelligent Auto Care
               </span>
             </h1>
             
             <p className="text-lg sm:text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto animate-fade-in stagger-2">
-              Automate investor queries, generate compliant reports, and monitor sentiment in real-time 
-              with our AI-powered IR platform built for {companyData.name}.
+              Automate diagnostics, generate service reports, and enhance customer experience 
+              with our AI-powered platform built for {serviceData.name}.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in stagger-3">
@@ -134,10 +134,10 @@ export default function Index() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Intelligent Features for Modern IR
+              Intelligent Features for Modern Auto Service
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Our AI-powered platform automates and enhances every aspect of investor relations.
+              Our AI-powered platform automates and enhances every aspect of vehicle service operations.
             </p>
           </div>
 
@@ -164,7 +164,7 @@ export default function Index() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Trusted by Leading IR Teams
+              Trusted by Leading Service Centers
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Real-time performance metrics from our platform.
@@ -191,10 +191,10 @@ export default function Index() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="gradient-bg rounded-3xl p-12 shadow-xl shadow-primary/20">
             <h2 className="text-3xl sm:text-4xl font-bold text-primary-foreground mb-4">
-              Ready to Transform Your IR Operations?
+              Ready to Transform Your Service Center?
             </h2>
             <p className="text-lg text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-              Experience the future of investor relations with our AI-powered platform.
+              Experience the future of vehicle service with our AI-powered platform.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/chat">
@@ -224,7 +224,7 @@ export default function Index() {
             <span className="font-semibold">Agentic AutoAI</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            © 2024 TechCorp Solutions Inc. | EY Techathon 6.0
+            © 2024 AutoCare Pro Service Center | EY Techathon 6.0
           </p>
         </div>
       </footer>

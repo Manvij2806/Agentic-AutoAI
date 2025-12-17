@@ -5,53 +5,52 @@ import {
   Download, 
   Loader2,
   CheckCircle,
-  BarChart3,
-  TrendingUp,
-  Leaf
+  Wrench,
+  Car,
+  AlertTriangle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useApp, companyData, Report } from '@/contexts/AppContext';
+import { useApp, serviceData, Report } from '@/contexts/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const reportTypes = [
-  { value: 'quarterly', label: 'Quarterly Earnings', icon: BarChart3, description: 'Financial performance summary' },
-  { value: 'esg', label: 'ESG Report', icon: Leaf, description: 'Environmental, Social, Governance' },
-  { value: 'investor-update', label: 'Investor Update', icon: TrendingUp, description: 'Strategic highlights & outlook' },
+  { value: 'service', label: 'Service Summary', icon: Wrench, description: 'Daily/weekly service overview' },
+  { value: 'maintenance', label: 'Maintenance Report', icon: Car, description: 'Vehicle maintenance tracking' },
+  { value: 'diagnostic', label: 'Diagnostic Report', icon: AlertTriangle, description: 'Fault codes and repairs' },
 ];
 
 const sections = [
-  { id: 'executive', label: 'Executive Summary' },
-  { id: 'financial', label: 'Financial Highlights' },
-  { id: 'metrics', label: 'Key Metrics & KPIs' },
-  { id: 'outlook', label: 'Forward Outlook' },
-  { id: 'risks', label: 'Risk Factors' },
+  { id: 'summary', label: 'Executive Summary' },
+  { id: 'services', label: 'Services Completed' },
+  { id: 'parts', label: 'Parts & Inventory' },
+  { id: 'technicians', label: 'Technician Performance' },
+  { id: 'customers', label: 'Customer Feedback' },
 ];
 
-const quarterlyData = [
-  { quarter: 'Q1 2024', revenue: 2.1, earnings: 0.58 },
-  { quarter: 'Q2 2024', revenue: 2.25, earnings: 0.62 },
-  { quarter: 'Q3 2024', revenue: 2.4, earnings: 0.67 },
+const serviceData2 = [
+  { service: 'Oil Change', count: 342, revenue: 25650 },
+  { service: 'Tire Service', count: 215, revenue: 32250 },
+  { service: 'Brakes', count: 178, revenue: 53400 },
 ];
 
-const yoyData = [
-  { metric: 'Revenue', current: 12, previous: 8 },
-  { metric: 'Net Income', current: 15, previous: 10 },
-  { metric: 'EPS', current: 14, previous: 9 },
-  { metric: 'FCF', current: 18, previous: 12 },
+const techPerformance = [
+  { name: 'Mike J.', jobs: 156, rating: 4.9 },
+  { name: 'Sarah C.', jobs: 148, rating: 4.8 },
+  { name: 'James R.', jobs: 142, rating: 4.7 },
+  { name: 'Tom B.', jobs: 138, rating: 4.8 },
 ];
 
 export default function Reports() {
   const { reports, setReports } = useApp();
   const { toast } = useToast();
-  const [reportType, setReportType] = useState('quarterly');
-  const [dateRange, setDateRange] = useState({ start: '2024-07-01', end: '2024-09-30' });
-  const [selectedSections, setSelectedSections] = useState(['executive', 'financial', 'metrics']);
+  const [reportType, setReportType] = useState('service');
+  const [dateRange, setDateRange] = useState({ start: '2024-12-01', end: '2024-12-17' });
+  const [selectedSections, setSelectedSections] = useState(['summary', 'services', 'parts']);
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [generatedReport, setGeneratedReport] = useState<Report | null>(null);
@@ -69,7 +68,6 @@ export default function Reports() {
     setProgress(0);
     setGeneratedReport(null);
 
-    // Simulate report generation with progress
     for (let i = 0; i <= 100; i += 5) {
       setProgress(i);
       await new Promise((resolve) => setTimeout(resolve, 150));
@@ -78,7 +76,7 @@ export default function Reports() {
     const newReport: Report = {
       id: Date.now().toString(),
       type: reportType as Report['type'],
-      title: `${reportTypes.find((r) => r.value === reportType)?.label} - ${companyData.quarter}`,
+      title: `${reportTypes.find((r) => r.value === reportType)?.label} - ${serviceData.month}`,
       createdAt: new Date(),
       status: 'complete',
       content: generateReportContent(reportType),
@@ -90,49 +88,47 @@ export default function Reports() {
 
     toast({
       title: 'Report Generated',
-      description: 'Your report is ready for review and export.',
+      description: 'Your service report is ready for review and export.',
     });
   };
 
   const generateReportContent = (type: string) => {
     const typeLabel = reportTypes.find((r) => r.value === type)?.label;
     return `
-# ${companyData.name}
-## ${typeLabel} - ${companyData.quarter}
+# ${serviceData.name}
+## ${typeLabel} - ${serviceData.month}
 
 ### Executive Summary
 
-TechCorp Solutions delivered another strong quarter with revenue of $2.4 billion, representing 12% year-over-year growth. Our strategic investments in AI and cloud infrastructure continue to drive sustainable growth across all business segments.
+AutoCare Pro delivered another strong month with 1,180 services completed, representing 18% year-over-year growth. Customer satisfaction remains high at 4.8/5 stars with a 78% return customer rate.
 
-### Financial Highlights
+### Services Completed
 
-| Metric | Q3 2024 | Q3 2023 | Change |
-|--------|---------|---------|--------|
-| Revenue | $2.4B | $2.14B | +12% |
-| Gross Margin | 28% | 26.5% | +150 bps |
-| Operating Income | $420M | $365M | +15% |
-| EPS | $3.45 | $3.02 | +14% |
+| Service Type | Count | Revenue | Avg. Ticket |
+|--------------|-------|---------|-------------|
+| Oil Changes | 342 | $25,650 | $75 |
+| Tire Services | 215 | $32,250 | $150 |
+| Brake Services | 178 | $53,400 | $300 |
+| Diagnostics | 156 | $15,600 | $100 |
+| A/C Services | 89 | $17,800 | $200 |
 
 ### Key Performance Indicators
 
-- **Cloud Services Revenue**: $1.08B (+25% YoY)
-- **Enterprise Customers**: 2,500+ (+18% YoY)
-- **Net Revenue Retention**: 125%
-- **Free Cash Flow**: $380M
+- **Total Revenue**: $485,000 (+18% YoY)
+- **Services Completed**: 1,180
+- **Average Ticket**: $287
+- **Labor Hours**: 1,680 hours
+- **Parts Used**: 3,420 units
 
-### Forward Outlook
+### Technician Productivity
 
-Management reaffirms FY2024 guidance with expected revenue growth of 14-16% and continued margin expansion. Key initiatives for Q4 include:
+All 8 technicians maintained excellent performance levels with an average of 147 services per technician this month.
 
-1. Launch of next-gen AI platform
-2. Expansion into APAC markets
-3. Strategic partnership announcements
+### Customer Feedback
 
-### Risk Factors
-
-- Macroeconomic uncertainty
-- Competitive pressures in cloud market
-- Regulatory changes in key markets
+- Return Rate: 78%
+- Average Rating: 4.8/5 ⭐
+- NPS Score: 72
     `;
   };
 
@@ -142,7 +138,7 @@ Management reaffirms FY2024 guidance with expected revenue growth of 14-16% and 
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Report Generator</h1>
         <p className="text-muted-foreground">
-          Generate AI-powered reports with financial data, charts, and professional narratives.
+          Generate AI-powered service reports with performance data, charts, and insights.
         </p>
       </div>
 
@@ -288,11 +284,11 @@ Management reaffirms FY2024 guidance with expected revenue growth of 14-16% and 
 
               {/* Charts */}
               <div className="bg-card rounded-xl p-6 border border-border/50">
-                <h3 className="font-semibold mb-4">Quarterly Revenue & Earnings</h3>
+                <h3 className="font-semibold mb-4">Services by Type</h3>
                 <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={quarterlyData}>
+                  <BarChart data={serviceData2}>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                    <XAxis dataKey="quarter" className="text-xs" />
+                    <XAxis dataKey="service" className="text-xs" />
                     <YAxis className="text-xs" />
                     <Tooltip
                       contentStyle={{
@@ -301,19 +297,18 @@ Management reaffirms FY2024 guidance with expected revenue growth of 14-16% and 
                         borderRadius: '8px'
                       }}
                     />
-                    <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Revenue ($B)" />
-                    <Bar dataKey="earnings" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} name="Earnings ($B)" />
+                    <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Count" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
 
               <div className="bg-card rounded-xl p-6 border border-border/50">
-                <h3 className="font-semibold mb-4">Year-over-Year Growth (%)</h3>
+                <h3 className="font-semibold mb-4">Technician Performance</h3>
                 <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={yoyData} layout="vertical">
+                  <BarChart data={techPerformance} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                     <XAxis type="number" className="text-xs" />
-                    <YAxis dataKey="metric" type="category" className="text-xs" width={80} />
+                    <YAxis dataKey="name" type="category" className="text-xs" width={60} />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: 'hsl(var(--card))',
@@ -321,48 +316,48 @@ Management reaffirms FY2024 guidance with expected revenue growth of 14-16% and 
                         borderRadius: '8px'
                       }}
                     />
-                    <Bar dataKey="current" fill="hsl(var(--success))" radius={[0, 4, 4, 0]} name="Current Year" />
+                    <Bar dataKey="jobs" fill="hsl(var(--success))" radius={[0, 4, 4, 0]} name="Jobs" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
 
-              {/* Financial Table */}
+              {/* Service Table */}
               <div className="bg-card rounded-xl p-6 border border-border/50">
-                <h3 className="font-semibold mb-4">Financial Summary</h3>
+                <h3 className="font-semibold mb-4">Service Summary</h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-border">
-                        <th className="text-left py-3 font-medium">Metric</th>
-                        <th className="text-right py-3 font-medium">Q3 2024</th>
-                        <th className="text-right py-3 font-medium">Q3 2023</th>
-                        <th className="text-right py-3 font-medium">Change</th>
+                        <th className="text-left py-3 font-medium">Service</th>
+                        <th className="text-right py-3 font-medium">Count</th>
+                        <th className="text-right py-3 font-medium">Revenue</th>
+                        <th className="text-right py-3 font-medium">Avg.</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr className="border-b border-border/50">
-                        <td className="py-3">Revenue</td>
-                        <td className="text-right">$2.4B</td>
-                        <td className="text-right">$2.14B</td>
-                        <td className="text-right text-success">+12%</td>
+                        <td className="py-3">Oil Changes</td>
+                        <td className="text-right">342</td>
+                        <td className="text-right">$25,650</td>
+                        <td className="text-right text-success">$75</td>
                       </tr>
                       <tr className="border-b border-border/50">
-                        <td className="py-3">Gross Margin</td>
-                        <td className="text-right">28%</td>
-                        <td className="text-right">26.5%</td>
-                        <td className="text-right text-success">+150 bps</td>
+                        <td className="py-3">Tire Services</td>
+                        <td className="text-right">215</td>
+                        <td className="text-right">$32,250</td>
+                        <td className="text-right text-success">$150</td>
                       </tr>
                       <tr className="border-b border-border/50">
-                        <td className="py-3">Operating Income</td>
-                        <td className="text-right">$420M</td>
-                        <td className="text-right">$365M</td>
-                        <td className="text-right text-success">+15%</td>
+                        <td className="py-3">Brake Services</td>
+                        <td className="text-right">178</td>
+                        <td className="text-right">$53,400</td>
+                        <td className="text-right text-success">$300</td>
                       </tr>
                       <tr>
-                        <td className="py-3">EPS</td>
-                        <td className="text-right">$3.45</td>
-                        <td className="text-right">$3.02</td>
-                        <td className="text-right text-success">+14%</td>
+                        <td className="py-3">Diagnostics</td>
+                        <td className="text-right">156</td>
+                        <td className="text-right">$15,600</td>
+                        <td className="text-right text-success">$100</td>
                       </tr>
                     </tbody>
                   </table>

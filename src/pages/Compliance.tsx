@@ -15,22 +15,32 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { ComplianceResult, ComplianceIssue } from '@/contexts/AppContext';
 
-const sampleText = `Dear Investors,
+const sampleText = `Vehicle Safety Inspection Report
 
-We are pleased to share that TechCorp is expecting record-breaking revenue growth in Q4 2024. Based on our internal projections, we anticipate revenue to exceed $3 billion, representing a 25% increase from the prior quarter.
+Vehicle: 2019 Honda Accord, VIN: 1HGCV1F34KA123456
+Mileage: 75,432 miles
+Date: December 17, 2024
 
-Our CEO mentioned in a private meeting that we are in advanced discussions for a major acquisition that could double our market share. While we cannot disclose details yet, this deal is expected to close before year-end.
+Brakes: Front pads at 2mm - REQUIRES IMMEDIATE ATTENTION
+Tires: Rear tires showing uneven wear, tread depth 3/32"
+Lights: All functioning properly
+Wipers: Front wipers streaking, recommend replacement
+Fluid Levels: All fluids topped off
+Battery: Testing at 11.8V - Below optimal (should be 12.4-12.7V)
 
-Looking forward, we project our stock price to reach $250 by mid-2025, making this an excellent time for investment.
+Technician Notes: Customer was advised of brake condition but declined immediate service. Said they would "think about it" and come back next week.
 
-Best regards,
-IR Team`;
+Recommended Services:
+- Brake pad replacement (front): $299
+- Tire rotation and alignment: $89
+- Wiper blade replacement: $45
+- Battery replacement: $189`;
 
 const complianceRules = [
-  { id: 'reg-fd', name: 'Regulation FD', description: 'Fair disclosure requirements' },
-  { id: 'mnpi', name: 'MNPI Detection', description: 'Material non-public information' },
-  { id: 'forward', name: 'Forward-Looking Statements', description: 'Safe harbor language required' },
-  { id: 'disclosure', name: 'Required Disclosures', description: 'Missing required disclaimers' },
+  { id: 'safety', name: 'Safety Standards', description: 'DOT safety requirements' },
+  { id: 'disclosure', name: 'Customer Disclosure', description: 'Required safety notifications' },
+  { id: 'documentation', name: 'Documentation', description: 'Proper record keeping' },
+  { id: 'liability', name: 'Liability Protection', description: 'Legal documentation' },
 ];
 
 export default function Compliance() {
@@ -43,7 +53,7 @@ export default function Compliance() {
     if (!text.trim()) {
       toast({
         title: 'No text provided',
-        description: 'Please enter or paste text to check for compliance.',
+        description: 'Please enter or paste inspection report to check for compliance.',
         variant: 'destructive',
       });
       return;
@@ -52,71 +62,74 @@ export default function Compliance() {
     setIsChecking(true);
     setResult(null);
 
-    // Simulate compliance check
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const issues: ComplianceIssue[] = [];
     const lowerText = text.toLowerCase();
 
-    // Check for forward-looking statements without safe harbor
-    const forwardKeywords = ['expecting', 'anticipate', 'project', 'will', 'forecast', 'predict'];
-    const hasForwardLooking = forwardKeywords.some((kw) => lowerText.includes(kw));
-    const hasSafeHarbor = lowerText.includes('safe harbor') || lowerText.includes('forward-looking statements');
-
-    if (hasForwardLooking && !hasSafeHarbor) {
-      issues.push({
-        severity: 'critical',
-        type: 'Forward-Looking Statements',
-        description: 'Document contains forward-looking statements without required safe harbor language.',
-        suggestion: 'Add standard safe harbor disclaimer: "This communication contains forward-looking statements within the meaning of Section 27A of the Securities Act..."',
-        location: 'Multiple occurrences',
-      });
-    }
-
-    // Check for MNPI keywords
-    const mnpiKeywords = ['private meeting', 'cannot disclose', 'confidential', 'insider', 'non-public'];
-    mnpiKeywords.forEach((kw) => {
-      if (lowerText.includes(kw)) {
+    // Check for critical safety issues not properly documented
+    if (lowerText.includes('2mm') || lowerText.includes('immediate attention')) {
+      if (!lowerText.includes('signed') && !lowerText.includes('acknowledged')) {
         issues.push({
           severity: 'critical',
-          type: 'MNPI Violation',
-          description: `Potential material non-public information detected: "${kw}"`,
-          suggestion: 'Remove or rephrase to avoid disclosure of material non-public information. Ensure all material information is publicly available before distribution.',
+          type: 'Safety Acknowledgment Missing',
+          description: 'Critical safety issue identified but customer acknowledgment not documented.',
+          suggestion: 'Obtain written customer signature acknowledging they were informed of the safety concern and their decision to decline service. Use Form SA-101 for liability protection.',
+          location: 'Brake inspection section',
         });
       }
-    });
+    }
 
-    // Check for stock price projections
-    if (lowerText.includes('stock price') && (lowerText.includes('will') || lowerText.includes('reach') || lowerText.includes('expect'))) {
+    // Check for declined critical services
+    if (lowerText.includes('declined') && (lowerText.includes('brake') || lowerText.includes('critical'))) {
       issues.push({
         severity: 'critical',
-        type: 'Stock Price Projection',
-        description: 'Projecting specific stock price targets is prohibited.',
-        suggestion: 'Remove stock price projections. Instead, discuss business fundamentals and let investors draw their own conclusions.',
+        type: 'Declined Safety Service',
+        description: 'Customer declined critical safety service without proper documentation.',
+        suggestion: 'Document the specific conversation, have customer sign a "Service Declined" waiver (Form SD-201), and schedule a follow-up reminder call.',
       });
     }
 
-    // Check for acquisition discussions
-    if (lowerText.includes('acquisition') && (lowerText.includes('discuss') || lowerText.includes('negotiation'))) {
+    // Check for battery below threshold
+    if (lowerText.includes('11.8v') || lowerText.includes('below optimal')) {
       issues.push({
         severity: 'warning',
-        type: 'Reg FD Concern',
-        description: 'Discussion of ongoing M&A activity may require formal disclosure.',
-        suggestion: 'Ensure any material M&A discussions are properly disclosed via Form 8-K or press release before investor communications.',
+        type: 'Battery Warning',
+        description: 'Low battery voltage detected. Customer should be warned of potential failure.',
+        suggestion: 'Provide written notice of battery condition. Recommend replacement or load testing within 30 days.',
       });
     }
 
-    // Check for missing disclaimers
-    if (!lowerText.includes('not financial advice') && !lowerText.includes('consult')) {
+    // Check for tire safety
+    if (lowerText.includes('3/32') || lowerText.includes('uneven wear')) {
+      issues.push({
+        severity: 'warning',
+        type: 'Tire Safety Notice',
+        description: 'Tires approaching minimum safe tread depth (2/32").',
+        suggestion: 'Document tire condition with photos. Provide written estimate for replacement. Most states require minimum 2/32" tread depth.',
+      });
+    }
+
+    // Check for missing required fields
+    if (!lowerText.includes('vin')) {
       issues.push({
         severity: 'info',
-        type: 'Missing Disclaimer',
-        description: 'Communication lacks standard investment disclaimer.',
-        suggestion: 'Add disclaimer: "This communication is for informational purposes only and does not constitute investment advice."',
+        type: 'VIN Documentation',
+        description: 'VIN should be clearly documented on all service records.',
+        suggestion: 'Always include full VIN for proper vehicle identification and service history tracking.',
       });
     }
 
-    // Calculate score
+    // Check for technician signature
+    if (!lowerText.includes('signature') && !lowerText.includes('certified')) {
+      issues.push({
+        severity: 'info',
+        type: 'Technician Certification',
+        description: 'Report should include technician certification number and signature.',
+        suggestion: 'Add technician ASE certification number and signature to validate inspection.',
+      });
+    }
+
     const criticalCount = issues.filter((i) => i.severity === 'critical').length;
     const warningCount = issues.filter((i) => i.severity === 'warning').length;
     const score = Math.max(0, 100 - criticalCount * 30 - warningCount * 10);
@@ -156,9 +169,9 @@ export default function Compliance() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Compliance Checker</h1>
+        <h1 className="text-3xl font-bold mb-2">Safety Compliance Checker</h1>
         <p className="text-muted-foreground">
-          AI-powered screening for Regulation FD, MNPI, and forward-looking statement compliance.
+          AI-powered screening for DOT safety standards, documentation requirements, and liability protection.
         </p>
       </div>
 
@@ -167,7 +180,7 @@ export default function Compliance() {
         <div className="space-y-6">
           <div className="bg-card rounded-xl p-6 border border-border/50">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Draft Communication</h2>
+              <h2 className="text-lg font-semibold">Inspection Report</h2>
               <Button variant="ghost" size="sm" onClick={loadSample}>
                 Load Sample
               </Button>
@@ -175,7 +188,7 @@ export default function Compliance() {
             <Textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Paste your investor communication, press release, or email draft here..."
+              placeholder="Paste your vehicle inspection report, service notes, or customer communication..."
               className="min-h-[300px] resize-none"
             />
             <div className="flex items-center justify-between mt-4">
@@ -256,7 +269,7 @@ export default function Compliance() {
                   </div>
                   <div>
                     <p className={cn("text-2xl font-bold", getScoreColor(result.score))}>
-                      {result.score >= 80 ? 'Good' : result.score >= 50 ? 'Needs Review' : 'High Risk'}
+                      {result.score >= 80 ? 'Compliant' : result.score >= 50 ? 'Needs Review' : 'High Risk'}
                     </p>
                     <p className="text-muted-foreground">
                       {result.issues.length} issue{result.issues.length !== 1 ? 's' : ''} found
@@ -280,7 +293,7 @@ export default function Compliance() {
                   <div className="text-center py-8">
                     <CheckCircle className="w-12 h-12 text-success mx-auto mb-3" />
                     <p className="font-medium">No compliance issues detected</p>
-                    <p className="text-sm text-muted-foreground">Your communication appears to be compliant.</p>
+                    <p className="text-sm text-muted-foreground">Your documentation appears to be compliant.</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -327,7 +340,7 @@ export default function Compliance() {
               <Shield className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">Compliance Results</h3>
               <p className="text-muted-foreground">
-                Enter your text and click "Check Compliance" to see the analysis results.
+                Enter your inspection report and click "Check Compliance" to see the analysis.
               </p>
             </div>
           )}

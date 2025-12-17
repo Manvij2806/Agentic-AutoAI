@@ -1,62 +1,64 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Sparkles, TrendingUp, FileText, Leaf, DollarSign, Loader2 } from 'lucide-react';
+import { Send, Bot, User, Sparkles, Wrench, FileText, Car, AlertTriangle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useApp, companyData, Message } from '@/contexts/AppContext';
+import { useApp, serviceData, Message } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const quickQueries = [
-  { label: 'Q3 Revenue?', icon: DollarSign },
-  { label: 'ESG Metrics', icon: Leaf },
-  { label: 'Dividend Policy', icon: TrendingUp },
-  { label: 'Growth Strategy', icon: Sparkles },
+  { label: 'Engine Light On?', icon: AlertTriangle },
+  { label: 'Oil Change Due', icon: Car },
+  { label: 'Brake Inspection', icon: Wrench },
+  { label: 'Service History', icon: Sparkles },
 ];
 
-const revenueData = [
-  { quarter: 'Q1', revenue: 2.1 },
-  { quarter: 'Q2', revenue: 2.25 },
-  { quarter: 'Q3', revenue: 2.4 },
-  { quarter: 'Q4 (Est)', revenue: 2.55 },
+const serviceVolumeData = [
+  { month: 'Sep', services: 980 },
+  { month: 'Oct', services: 1120 },
+  { month: 'Nov', services: 1050 },
+  { month: 'Dec', services: 1180 },
 ];
 
 // Simulated AI responses
 const aiResponses: Record<string, { content: string; sources: string[]; showChart?: boolean }> = {
-  'q3 revenue': {
-    content: `**Q3 2024 Revenue Performance**\n\nTechCorp Solutions reported revenue of **$2.4 billion** for Q3 2024, representing a **12% year-over-year increase** from $2.14B in Q3 2023.\n\n**Key Highlights:**\n- Gross margin improved to 28%, up from 26.5% YoY\n- Operating income grew 15% to $420M\n- Cloud services segment contributed 45% of total revenue\n\nThe strong performance was driven by increased enterprise adoption and expansion of our AI-powered solutions portfolio.`,
-    sources: ['Q3_2024_Earnings_Report.pdf', 'Investor_Presentation_Q3.pdf'],
+  'engine light': {
+    content: `**Check Engine Light Diagnosis**\n\nBased on common diagnostic codes, here are the most likely causes:\n\n**Common Causes:**\n- **P0300-P0308**: Engine misfires - could be spark plugs, ignition coils, or fuel injectors\n- **P0171/P0174**: System too lean - check for vacuum leaks or MAF sensor issues\n- **P0420**: Catalytic converter efficiency below threshold\n- **P0440-P0457**: EVAP system issues - often a loose gas cap\n\n**Recommended Actions:**\n1. Connect OBD-II scanner to read specific codes\n2. Check gas cap is properly sealed\n3. Inspect for visible damage or loose connections\n4. Schedule diagnostic appointment for detailed analysis\n\n**Estimated Diagnostic Cost:** $75-150`,
+    sources: ['Vehicle_Diagnostic_Codes.pdf', 'OBD_Reference_Guide.pdf'],
+    showChart: false,
+  },
+  'oil change': {
+    content: `**Oil Change Service Information**\n\nBased on typical maintenance schedules:\n\n**Conventional Oil:**\n- Change interval: Every 3,000-5,000 miles\n- Cost: $35-75\n- Duration: 30-45 minutes\n\n**Synthetic Oil:**\n- Change interval: Every 7,500-10,000 miles\n- Cost: $65-125\n- Duration: 30-45 minutes\n\n**What's Included:**\n- Drain old oil and replace with new\n- Replace oil filter\n- Check and top off fluids\n- Visual inspection of brakes, belts, hoses\n- Tire pressure check\n\n**Current Special:** 15% off synthetic oil changes this month!`,
+    sources: ['Maintenance_Schedule_Guide.pdf'],
     showChart: true,
   },
-  'esg metrics': {
-    content: `**ESG Performance Overview**\n\nTechCorp maintains strong ESG ratings across all categories:\n\n**Environmental Score: 85/100**\n- Carbon neutral operations achieved\n- 100% renewable energy in data centers\n- 30% reduction in water usage\n\n**Social Score: 78/100**\n- 45% diversity in leadership roles\n- $50M invested in STEM education\n- 98% employee satisfaction rate\n\n**Governance Score: 92/100**\n- Independent board majority\n- Executive compensation tied to ESG goals\n- Best-in-class data privacy practices`,
-    sources: ['ESG_Annual_Report_2024.pdf'],
+  'brake': {
+    content: `**Brake Inspection & Service**\n\nComprehensive brake assessment includes:\n\n**Inspection Points:**\n- Brake pad thickness (minimum 3mm recommended)\n- Rotor condition and thickness\n- Brake fluid level and condition\n- Brake lines and hoses\n- Caliper operation\n- Emergency brake function\n\n**Service Options:**\n\n| Service | Price Range | Duration |\n|---------|-------------|----------|\n| Inspection Only | $25-50 | 30 min |\n| Pad Replacement | $150-300/axle | 1-2 hrs |\n| Rotor Resurfacing | $50-100/rotor | 1 hr |\n| Full Brake Service | $300-600/axle | 2-3 hrs |\n\n**Warning Signs:**\n- Squealing or grinding noises\n- Vibration when braking\n- Car pulling to one side\n- Soft or spongy brake pedal`,
+    sources: ['Service_History_Report_Dec2024.pdf', 'Brake_System_Guide.pdf'],
   },
-  'dividend policy': {
-    content: `**Dividend Policy & Capital Returns**\n\nTechCorp maintains a progressive dividend policy with commitment to shareholder returns:\n\n**Current Dividend:**\n- Quarterly dividend: $0.45 per share\n- Annual yield: 1.8% (based on current price)\n- Payout ratio: 35% of earnings\n\n**Capital Allocation:**\n- 40% reinvested in R&D\n- 35% returned to shareholders (dividends + buybacks)\n- 25% strategic acquisitions\n\nThe Board has approved a 10% dividend increase for FY2025, subject to continued financial performance.`,
-    sources: ['Q3_2024_Earnings_Report.pdf', 'Capital_Allocation_Policy.pdf'],
-  },
-  'growth strategy': {
-    content: `**Strategic Growth Initiatives**\n\nTechCorp's growth strategy focuses on three pillars:\n\n**1. AI & Automation (40% of investment)**\n- Expanding enterprise AI solutions\n- New generative AI product launches in Q1 2025\n- Strategic partnerships with cloud providers\n\n**2. Geographic Expansion (30%)**\n- APAC revenue target: +25% YoY\n- New offices in Singapore and Mumbai\n- Localized product offerings\n\n**3. M&A Pipeline (30%)**\n- 3-5 tuck-in acquisitions planned\n- Focus on cybersecurity and data analytics\n- $500M allocated for strategic deals\n\n**2025 Guidance:** Revenue growth of 15-18%, with margin expansion of 100-150 bps.`,
-    sources: ['Investor_Presentation_Q3.pdf', 'Strategic_Plan_2025.pdf'],
+  'service history': {
+    content: `**Service Center Performance - December 2024**\n\n**Monthly Overview:**\n- Total services completed: 1,180\n- Revenue: $485,000 (+18% YoY)\n- Average ticket: $287\n- Customer satisfaction: 4.8/5 ⭐\n\n**Top Services This Month:**\n1. Oil Changes: 342 (29%)\n2. Tire Services: 215 (18%)\n3. Brake Services: 178 (15%)\n4. Diagnostics: 156 (13%)\n5. A/C Services: 89 (8%)\n\n**Technician Productivity:**\n- Active technicians: 8\n- Avg. services/tech: 147/month\n- Labor hours utilized: 1,680\n\n**Customer Retention:** 78% return customers`,
+    sources: ['Service_History_Report_Dec2024.pdf'],
+    showChart: true,
   },
 };
 
 function getAIResponse(query: string): { content: string; sources: string[]; showChart?: boolean } {
   const lowerQuery = query.toLowerCase();
   
-  if (lowerQuery.includes('revenue') || lowerQuery.includes('q3')) {
-    return aiResponses['q3 revenue'];
-  } else if (lowerQuery.includes('esg') || lowerQuery.includes('environmental') || lowerQuery.includes('sustainability')) {
-    return aiResponses['esg metrics'];
-  } else if (lowerQuery.includes('dividend') || lowerQuery.includes('payout')) {
-    return aiResponses['dividend policy'];
-  } else if (lowerQuery.includes('growth') || lowerQuery.includes('strategy') || lowerQuery.includes('future')) {
-    return aiResponses['growth strategy'];
+  if (lowerQuery.includes('engine') || lowerQuery.includes('light') || lowerQuery.includes('check')) {
+    return aiResponses['engine light'];
+  } else if (lowerQuery.includes('oil') || lowerQuery.includes('change')) {
+    return aiResponses['oil change'];
+  } else if (lowerQuery.includes('brake') || lowerQuery.includes('stop')) {
+    return aiResponses['brake'];
+  } else if (lowerQuery.includes('history') || lowerQuery.includes('service') || lowerQuery.includes('report')) {
+    return aiResponses['service history'];
   }
   
   return {
-    content: `I'd be happy to help you with information about ${companyData.name}. Based on our Q3 2024 data:\n\n- **Revenue:** $2.4B (+12% YoY)\n- **EPS:** $3.45\n- **Market Cap:** $45B\n- **ESG Score:** 85/100\n\nCould you please be more specific about what aspect you'd like to explore? I can provide detailed information on:\n- Financial performance and metrics\n- ESG initiatives and ratings\n- Dividend policy and capital returns\n- Growth strategy and outlook`,
-    sources: ['Q3_2024_Earnings_Report.pdf'],
+    content: `I'd be happy to help you with vehicle service information. Based on our ${serviceData.name} data:\n\n- **Services Completed:** ${serviceData.servicesCompleted.toLocaleString()}\n- **Customer Rating:** ${serviceData.customerSatisfaction}/5 ⭐\n- **Avg. Service Ticket:** $${serviceData.avgTicket}\n- **Technicians Available:** ${serviceData.technicianCount}\n\nI can help you with:\n- Vehicle diagnostics and fault codes\n- Maintenance schedules and recommendations\n- Service estimates and pricing\n- Appointment scheduling\n\nWhat would you like to know more about?`,
+    sources: ['Service_History_Report_Dec2024.pdf'],
   };
 }
 
@@ -97,7 +99,7 @@ export default function Chat() {
         content: response.content,
         timestamp: new Date(),
         sources: response.sources,
-        chart: response.showChart ? revenueData : undefined,
+        chart: response.showChart ? serviceVolumeData : undefined,
       };
       setMessages((prev) => [...prev, aiMessage]);
       setIsTyping(false);
@@ -143,11 +145,11 @@ export default function Chat() {
                   
                   {message.chart && (
                     <div className="mt-4 p-4 bg-background/50 rounded-lg">
-                      <p className="text-sm font-medium mb-3">Revenue Trend ($ Billions)</p>
+                      <p className="text-sm font-medium mb-3">Monthly Service Volume</p>
                       <ResponsiveContainer width="100%" height={150}>
                         <LineChart data={message.chart}>
                           <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                          <XAxis dataKey="quarter" className="text-xs" />
+                          <XAxis dataKey="month" className="text-xs" />
                           <YAxis className="text-xs" />
                           <Tooltip 
                             contentStyle={{ 
@@ -158,7 +160,7 @@ export default function Chat() {
                           />
                           <Line 
                             type="monotone" 
-                            dataKey="revenue" 
+                            dataKey="services" 
                             stroke="hsl(var(--primary))" 
                             strokeWidth={2}
                             dot={{ fill: 'hsl(var(--primary))' }}
@@ -243,7 +245,7 @@ export default function Chat() {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about financials, ESG, dividends, or strategy..."
+              placeholder="Ask about diagnostics, maintenance, pricing, or scheduling..."
               className="flex-1 h-12"
               disabled={isTyping}
             />
@@ -257,67 +259,67 @@ export default function Chat() {
       {/* Context Panel - Desktop Only */}
       <div className="hidden lg:block w-[40%] border-l border-border bg-muted/30 overflow-y-auto">
         <div className="p-6 space-y-6">
-          {/* Company Overview */}
+          {/* Service Center Overview */}
           <div className="bg-card rounded-xl p-6 shadow-sm border border-border/50">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-primary" />
-              {companyData.name}
+              <Wrench className="w-5 h-5 text-primary" />
+              {serviceData.name}
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Ticker</span>
-                <span className="font-medium">{companyData.ticker}</span>
+                <span className="text-sm text-muted-foreground">Location</span>
+                <span className="font-medium">{serviceData.location}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Market Cap</span>
-                <span className="font-medium">${(companyData.marketCap / 1e9).toFixed(0)}B</span>
+                <span className="text-sm text-muted-foreground">Service Bays</span>
+                <span className="font-medium">{serviceData.baysAvailable}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">P/E Ratio</span>
-                <span className="font-medium">{companyData.peRatio}x</span>
+                <span className="text-sm text-muted-foreground">Technicians</span>
+                <span className="font-medium">{serviceData.technicianCount}</span>
               </div>
             </div>
           </div>
 
           {/* Key Metrics */}
           <div className="bg-card rounded-xl p-6 shadow-sm border border-border/50">
-            <h3 className="font-semibold mb-4">Q3 2024 Highlights</h3>
+            <h3 className="font-semibold mb-4">December 2024 Stats</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-3 bg-muted/50 rounded-lg">
-                <p className="text-2xl font-bold text-primary">${(companyData.revenue / 1e9).toFixed(1)}B</p>
+                <p className="text-2xl font-bold text-primary">${(serviceData.revenue / 1000).toFixed(0)}K</p>
                 <p className="text-xs text-muted-foreground">Revenue</p>
               </div>
               <div className="text-center p-3 bg-muted/50 rounded-lg">
-                <p className="text-2xl font-bold text-success">+{companyData.revenueGrowth}%</p>
+                <p className="text-2xl font-bold text-success">+{serviceData.revenueGrowth}%</p>
                 <p className="text-xs text-muted-foreground">YoY Growth</p>
               </div>
               <div className="text-center p-3 bg-muted/50 rounded-lg">
-                <p className="text-2xl font-bold">${companyData.eps}</p>
-                <p className="text-xs text-muted-foreground">EPS</p>
+                <p className="text-2xl font-bold">${serviceData.avgTicket}</p>
+                <p className="text-xs text-muted-foreground">Avg. Ticket</p>
               </div>
               <div className="text-center p-3 bg-muted/50 rounded-lg">
-                <p className="text-2xl font-bold">{companyData.grossMargin}%</p>
-                <p className="text-xs text-muted-foreground">Margin</p>
+                <p className="text-2xl font-bold">{serviceData.customerSatisfaction}⭐</p>
+                <p className="text-xs text-muted-foreground">Rating</p>
               </div>
             </div>
           </div>
 
-          {/* ESG Scores */}
+          {/* Quality Scores */}
           <div className="bg-card rounded-xl p-6 shadow-sm border border-border/50">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <Leaf className="w-5 h-5 text-success" />
-              ESG Performance
+              <Car className="w-5 h-5 text-success" />
+              Quality Ratings
             </h3>
             <div className="space-y-3">
               {[
-                { label: 'Environmental', score: companyData.esg.environmental, color: 'bg-success' },
-                { label: 'Social', score: companyData.esg.social, color: 'bg-primary' },
-                { label: 'Governance', score: companyData.esg.governance, color: 'bg-secondary' },
+                { label: 'Service Quality', score: serviceData.ratings.quality, color: 'bg-success' },
+                { label: 'Timeliness', score: serviceData.ratings.timeliness, color: 'bg-primary' },
+                { label: 'Communication', score: serviceData.ratings.communication, color: 'bg-secondary' },
               ].map((item) => (
                 <div key={item.label}>
                   <div className="flex justify-between text-sm mb-1">
                     <span>{item.label}</span>
-                    <span className="font-medium">{item.score}/100</span>
+                    <span className="font-medium">{item.score}%</span>
                   </div>
                   <div className="h-2 bg-muted rounded-full overflow-hidden">
                     <div
