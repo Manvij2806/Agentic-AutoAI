@@ -4,97 +4,97 @@ import {
   TrendingDown, 
   Minus,
   AlertTriangle,
-  Newspaper,
+  MessageSquare,
   BarChart3,
   Star,
   Hash,
-  ExternalLink
+  ThumbsUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { companyData } from '@/contexts/AppContext';
+import { serviceData } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-const sentimentScore = 72; // 0-100
+const sentimentScore = 88;
 
 const sentimentData = [
-  { date: 'Nov 17', positive: 65, neutral: 25, negative: 10 },
-  { date: 'Nov 24', positive: 58, neutral: 30, negative: 12 },
-  { date: 'Dec 01', positive: 70, neutral: 22, negative: 8 },
-  { date: 'Dec 08', positive: 68, neutral: 24, negative: 8 },
-  { date: 'Dec 15', positive: 75, neutral: 18, negative: 7 },
-  { date: 'Dec 17', positive: 72, neutral: 20, negative: 8 },
+  { date: 'Nov 17', positive: 85, neutral: 12, negative: 3 },
+  { date: 'Nov 24', positive: 82, neutral: 14, negative: 4 },
+  { date: 'Dec 01', positive: 88, neutral: 10, negative: 2 },
+  { date: 'Dec 08', positive: 86, neutral: 11, negative: 3 },
+  { date: 'Dec 15', positive: 90, neutral: 8, negative: 2 },
+  { date: 'Dec 17', positive: 88, neutral: 10, negative: 2 },
 ];
 
 const pieData = [
-  { name: 'Positive', value: 72, color: 'hsl(var(--success))' },
-  { name: 'Neutral', value: 20, color: 'hsl(var(--muted-foreground))' },
-  { name: 'Negative', value: 8, color: 'hsl(var(--destructive))' },
+  { name: 'Positive', value: 88, color: 'hsl(var(--success))' },
+  { name: 'Neutral', value: 10, color: 'hsl(var(--muted-foreground))' },
+  { name: 'Negative', value: 2, color: 'hsl(var(--destructive))' },
 ];
 
-const newsItems = [
+const reviewItems = [
   {
     id: 1,
-    title: 'TechCorp Reports Strong Q3 Earnings, Beats Analyst Expectations',
-    source: 'Reuters',
+    title: 'Excellent service! They fixed my car quickly and the price was fair.',
+    source: 'Google Reviews',
     time: '2 hours ago',
     sentiment: 'positive',
-    url: '#',
+    rating: 5,
   },
   {
     id: 2,
-    title: 'TechCorp Announces Strategic AI Partnership with Microsoft',
-    source: 'Bloomberg',
+    title: 'Very professional team. They explained everything clearly before starting work.',
+    source: 'Yelp',
     time: '5 hours ago',
     sentiment: 'positive',
-    url: '#',
+    rating: 5,
   },
   {
     id: 3,
-    title: 'Analysts Raise Price Targets Following Earnings Beat',
-    source: 'CNBC',
+    title: 'Great experience! Will definitely come back for future services.',
+    source: 'Google Reviews',
     time: '8 hours ago',
     sentiment: 'positive',
-    url: '#',
+    rating: 5,
   },
   {
     id: 4,
-    title: 'Tech Sector Faces Regulatory Scrutiny in EU Markets',
-    source: 'Financial Times',
+    title: 'Service was okay but had to wait longer than expected.',
+    source: 'Facebook',
     time: '1 day ago',
     sentiment: 'neutral',
-    url: '#',
+    rating: 3,
   },
   {
     id: 5,
-    title: 'TechCorp CFO Discusses Capital Allocation Strategy',
-    source: 'Wall Street Journal',
+    title: 'Honest mechanics who dont try to upsell unnecessary services.',
+    source: 'Yelp',
     time: '2 days ago',
-    sentiment: 'neutral',
-    url: '#',
+    sentiment: 'positive',
+    rating: 5,
   },
 ];
 
-const analystRatings = [
-  { firm: 'Goldman Sachs', rating: 'Buy', target: 195, previous: 180 },
-  { firm: 'Morgan Stanley', rating: 'Overweight', target: 190, previous: 175 },
-  { firm: 'JP Morgan', rating: 'Buy', target: 188, previous: 170 },
-  { firm: 'Barclays', rating: 'Hold', target: 175, previous: 172 },
-  { firm: 'UBS', rating: 'Buy', target: 192, previous: 178 },
+const topKeywords = [
+  { word: 'Professional', count: 156, trend: 'up' },
+  { word: 'Fair Price', count: 134, trend: 'up' },
+  { word: 'Quick Service', count: 98, trend: 'neutral' },
+  { word: 'Honest', count: 87, trend: 'up' },
+  { word: 'Friendly', count: 72, trend: 'up' },
+  { word: 'Clean', count: 65, trend: 'neutral' },
 ];
 
-const topKeywords = [
-  { word: 'AI', count: 156, trend: 'up' },
-  { word: 'Cloud', count: 134, trend: 'up' },
-  { word: 'Revenue', count: 98, trend: 'neutral' },
-  { word: 'Growth', count: 87, trend: 'up' },
-  { word: 'Partnership', count: 72, trend: 'up' },
-  { word: 'Earnings', count: 65, trend: 'neutral' },
+const platformRatings = [
+  { platform: 'Google Reviews', rating: 4.8, reviews: 342 },
+  { platform: 'Yelp', rating: 4.7, reviews: 156 },
+  { platform: 'Facebook', rating: 4.9, reviews: 89 },
+  { platform: 'BBB', rating: 'A+', reviews: 45 },
+  { platform: 'CarFax', rating: 4.6, reviews: 78 },
 ];
 
 const alerts = [
-  { type: 'positive', message: 'Sentiment spike: +15% in last 24 hours', time: '2 hours ago' },
-  { type: 'info', message: '5 new analyst reports published', time: '6 hours ago' },
+  { type: 'positive', message: '5-star review spike: +20% this week', time: '2 hours ago' },
+  { type: 'info', message: '12 new reviews to respond to', time: '6 hours ago' },
 ];
 
 export default function Sentiment() {
@@ -115,13 +115,29 @@ export default function Sentiment() {
     return 'text-destructive';
   };
 
+  const renderStars = (rating: number) => {
+    return (
+      <div className="flex gap-0.5">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={cn(
+              "w-4 h-4",
+              star <= rating ? "fill-warning text-warning" : "text-muted"
+            )}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Sentiment Analysis</h1>
+        <h1 className="text-3xl font-bold mb-2">Customer Sentiment</h1>
         <p className="text-muted-foreground">
-          Real-time monitoring of market sentiment, news mentions, and analyst ratings for {companyData.ticker}.
+          Real-time monitoring of customer reviews, feedback, and satisfaction for {serviceData.name}.
         </p>
       </div>
 
@@ -137,7 +153,7 @@ export default function Sentiment() {
                 alert.type === 'info' && "bg-primary/10 border-primary/30"
               )}
             >
-              <AlertTriangle className={cn(
+              <ThumbsUp className={cn(
                 "w-5 h-5",
                 alert.type === 'positive' && "text-success",
                 alert.type === 'info' && "text-primary"
@@ -155,7 +171,7 @@ export default function Sentiment() {
           {/* Sentiment Gauge & Pie */}
           <div className="grid sm:grid-cols-2 gap-6">
             <div className="bg-card rounded-xl p-6 border border-border/50 text-center">
-              <h3 className="font-semibold mb-4">Overall Sentiment Score</h3>
+              <h3 className="font-semibold mb-4">Overall Satisfaction Score</h3>
               <div className="relative w-40 h-40 mx-auto mb-4">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                   <circle
@@ -179,7 +195,7 @@ export default function Sentiment() {
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center flex-col">
                   <span className={cn("text-4xl font-bold", getSentimentColor(sentimentScore))}>
-                    {sentimentScore}
+                    {sentimentScore}%
                   </span>
                   <span className="text-sm text-muted-foreground">Positive</span>
                 </div>
@@ -201,7 +217,7 @@ export default function Sentiment() {
             </div>
 
             <div className="bg-card rounded-xl p-6 border border-border/50">
-              <h3 className="font-semibold mb-4">Sentiment Distribution</h3>
+              <h3 className="font-semibold mb-4">Review Distribution</h3>
               <ResponsiveContainer width="100%" height={180}>
                 <PieChart>
                   <Pie
@@ -251,17 +267,17 @@ export default function Sentiment() {
             </ResponsiveContainer>
           </div>
 
-          {/* News Feed */}
+          {/* Recent Reviews */}
           <div className="bg-card rounded-xl p-6 border border-border/50">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold flex items-center gap-2">
-                <Newspaper className="w-5 h-5 text-primary" />
-                Latest News Mentions
+                <MessageSquare className="w-5 h-5 text-primary" />
+                Recent Customer Reviews
               </h3>
               <Button variant="ghost" size="sm">View All</Button>
             </div>
             <div className="space-y-4">
-              {newsItems.map((item) => (
+              {reviewItems.map((item) => (
                 <div
                   key={item.id}
                   className="flex items-start gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors"
@@ -270,16 +286,15 @@ export default function Sentiment() {
                     {getSentimentIcon(item.sentiment)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <a href={item.url} className="font-medium hover:text-primary transition-colors line-clamp-2">
-                      {item.title}
-                    </a>
-                    <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-                      <span>{item.source}</span>
-                      <span>•</span>
-                      <span>{item.time}</span>
+                    <p className="font-medium line-clamp-2">{item.title}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      {renderStars(item.rating)}
+                      <span className="text-sm text-muted-foreground">•</span>
+                      <span className="text-sm text-muted-foreground">{item.source}</span>
+                      <span className="text-sm text-muted-foreground">•</span>
+                      <span className="text-sm text-muted-foreground">{item.time}</span>
                     </div>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                 </div>
               ))}
             </div>
@@ -292,7 +307,7 @@ export default function Sentiment() {
           <div className="bg-card rounded-xl p-6 border border-border/50">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
               <Hash className="w-5 h-5 text-primary" />
-              Top Keywords
+              Top Mentions
             </h3>
             <div className="space-y-3">
               {topKeywords.map((keyword, index) => (
@@ -311,31 +326,26 @@ export default function Sentiment() {
             </div>
           </div>
 
-          {/* Analyst Ratings */}
+          {/* Platform Ratings */}
           <div className="bg-card rounded-xl p-6 border border-border/50">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
               <Star className="w-5 h-5 text-primary" />
-              Analyst Ratings
+              Platform Ratings
             </h3>
             <div className="space-y-4">
-              {analystRatings.map((analyst) => (
-                <div key={analyst.firm} className="p-3 rounded-lg bg-muted/30">
+              {platformRatings.map((platform) => (
+                <div key={platform.platform} className="p-3 rounded-lg bg-muted/30">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm">{analyst.firm}</span>
+                    <span className="font-medium text-sm">{platform.platform}</span>
                     <span className={cn(
-                      "text-xs px-2 py-0.5 rounded-full",
-                      analyst.rating === 'Buy' && "bg-success/20 text-success",
-                      analyst.rating === 'Overweight' && "bg-success/20 text-success",
-                      analyst.rating === 'Hold' && "bg-warning/20 text-warning"
+                      "text-sm font-bold",
+                      typeof platform.rating === 'number' && platform.rating >= 4.5 ? "text-success" : "text-warning"
                     )}>
-                      {analyst.rating}
+                      {typeof platform.rating === 'number' ? `${platform.rating}★` : platform.rating}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Target: ${analyst.target}</span>
-                    <span className="text-success text-xs">
-                      +${analyst.target - analyst.previous} from ${analyst.previous}
-                    </span>
+                  <div className="text-sm text-muted-foreground">
+                    {platform.reviews} reviews
                   </div>
                 </div>
               ))}
@@ -346,24 +356,24 @@ export default function Sentiment() {
           <div className="bg-card rounded-xl p-6 border border-border/50">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-primary" />
-              Coverage Stats
+              Review Stats
             </h3>
             <div className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Total Mentions (7d)</span>
-                <span className="font-semibold">1,247</span>
+                <span className="text-muted-foreground">Total Reviews (30d)</span>
+                <span className="font-semibold">247</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Analyst Coverage</span>
-                <span className="font-semibold">28 firms</span>
+                <span className="text-muted-foreground">Response Rate</span>
+                <span className="font-semibold">98%</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Avg. Price Target</span>
-                <span className="font-semibold">$188</span>
+                <span className="text-muted-foreground">Avg. Response Time</span>
+                <span className="font-semibold">2 hours</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Buy Ratings</span>
-                <span className="font-semibold text-success">78%</span>
+                <span className="text-muted-foreground">5-Star Reviews</span>
+                <span className="font-semibold text-success">82%</span>
               </div>
             </div>
           </div>

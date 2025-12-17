@@ -20,15 +20,15 @@ export interface Document {
 }
 
 export interface ExtractedMetrics {
-  revenue?: number;
-  earnings?: number;
-  growth?: number;
-  esgScore?: number;
+  servicesCost?: number;
+  partsUsed?: number;
+  laborHours?: number;
+  customerRating?: number;
 }
 
 export interface Report {
   id: string;
-  type: 'quarterly' | 'esg' | 'investor-update';
+  type: 'service' | 'maintenance' | 'diagnostic';
   title: string;
   createdAt: Date;
   content: string;
@@ -52,30 +52,30 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'analyst' | 'viewer';
+  role: 'admin' | 'technician' | 'advisor';
   status: 'active' | 'inactive';
   lastActive: Date;
 }
 
-// Company Data
-export const companyData = {
-  name: 'TechCorp Solutions Inc.',
-  ticker: 'TECH',
-  marketCap: 45000000000,
-  quarter: 'Q3 2024',
-  revenue: 2400000000,
-  revenueGrowth: 12,
-  grossMargin: 28,
-  eps: 3.45,
-  esg: {
-    environmental: 85,
-    social: 78,
-    governance: 92,
-    overall: 85,
+// Service Center Data
+export const serviceData = {
+  name: 'AutoCare Pro Service Center',
+  location: 'Dallas, TX',
+  servicesCompleted: 12500,
+  month: 'December 2024',
+  revenue: 485000,
+  revenueGrowth: 18,
+  avgTicket: 287,
+  customerSatisfaction: 4.8,
+  ratings: {
+    quality: 92,
+    timeliness: 88,
+    communication: 95,
+    overall: 92,
   },
-  dividendYield: 1.8,
-  peRatio: 28.5,
-  employees: 12500,
+  returnRate: 2.1,
+  technicianCount: 8,
+  baysAvailable: 12,
 };
 
 // Context
@@ -99,7 +99,7 @@ const sampleMessages: Message[] = [
   {
     id: '1',
     role: 'assistant',
-    content: "Welcome to TechCorp IR Assistant! I'm here to help you with investor relations queries. Ask me about financials, ESG metrics, or company performance.",
+    content: "Welcome to AutoCare Pro AI Assistant! I'm here to help you with vehicle diagnostics, service recommendations, maintenance schedules, and customer queries. How can I assist you today?",
     timestamp: new Date(),
   },
 ];
@@ -107,34 +107,34 @@ const sampleMessages: Message[] = [
 const sampleDocuments: Document[] = [
   {
     id: '1',
-    name: 'Q3_2024_Earnings_Report.pdf',
+    name: 'Service_History_Report_Dec2024.pdf',
     type: 'application/pdf',
     size: 2450000,
-    uploadedAt: new Date('2024-10-15'),
-    metrics: { revenue: 2400000000, earnings: 672000000, growth: 12 },
+    uploadedAt: new Date('2024-12-15'),
+    metrics: { servicesCost: 485000, partsUsed: 3420, laborHours: 1680 },
   },
   {
     id: '2',
-    name: 'ESG_Annual_Report_2024.pdf',
+    name: 'Vehicle_Diagnostic_Codes.pdf',
     type: 'application/pdf',
     size: 3200000,
-    uploadedAt: new Date('2024-09-01'),
-    metrics: { esgScore: 85 },
+    uploadedAt: new Date('2024-12-01'),
+    metrics: { customerRating: 4.8 },
   },
   {
     id: '3',
-    name: 'Investor_Presentation_Q3.pdf',
+    name: 'Maintenance_Schedule_Guide.pdf',
     type: 'application/pdf',
     size: 5100000,
-    uploadedAt: new Date('2024-10-20'),
+    uploadedAt: new Date('2024-12-10'),
   },
 ];
 
 const sampleUsers: User[] = [
-  { id: '1', name: 'Sarah Johnson', email: 'sarah.j@techcorp.com', role: 'admin', status: 'active', lastActive: new Date() },
-  { id: '2', name: 'Michael Chen', email: 'michael.c@techcorp.com', role: 'analyst', status: 'active', lastActive: new Date() },
-  { id: '3', name: 'Emily Rodriguez', email: 'emily.r@techcorp.com', role: 'analyst', status: 'active', lastActive: new Date(Date.now() - 86400000) },
-  { id: '4', name: 'David Kim', email: 'david.k@techcorp.com', role: 'viewer', status: 'inactive', lastActive: new Date(Date.now() - 604800000) },
+  { id: '1', name: 'Mike Johnson', email: 'mike.j@autocarepro.com', role: 'admin', status: 'active', lastActive: new Date() },
+  { id: '2', name: 'Sarah Chen', email: 'sarah.c@autocarepro.com', role: 'technician', status: 'active', lastActive: new Date() },
+  { id: '3', name: 'James Rodriguez', email: 'james.r@autocarepro.com', role: 'technician', status: 'active', lastActive: new Date(Date.now() - 86400000) },
+  { id: '4', name: 'Emily Davis', email: 'emily.d@autocarepro.com', role: 'advisor', status: 'inactive', lastActive: new Date(Date.now() - 604800000) },
 ];
 
 export function AppProvider({ children }: { children: ReactNode }) {

@@ -5,10 +5,9 @@ import {
   DollarSign, 
   TrendingUp,
   Download,
-  Filter,
   Zap,
   Users,
-  MessageSquare,
+  Wrench,
   CheckCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -33,85 +32,83 @@ import {
 const metrics = [
   { 
     label: 'Time Savings', 
-    value: '96%', 
-    change: '+12%', 
+    value: '85%', 
+    change: '+15%', 
     icon: Clock,
-    description: 'vs. manual process',
+    description: 'vs. manual diagnostics',
     color: 'text-success'
   },
   { 
-    label: 'Cost Savings', 
-    value: '$487K', 
-    change: '+8%', 
+    label: 'Revenue Growth', 
+    value: '$485K', 
+    change: '+18%', 
     icon: DollarSign,
-    description: 'Annual savings',
+    description: 'This month',
     color: 'text-primary'
   },
   { 
-    label: 'Automation Rate', 
-    value: '89%', 
-    change: '+5%', 
+    label: 'Efficiency Rate', 
+    value: '92%', 
+    change: '+8%', 
     icon: Zap,
-    description: 'Queries auto-resolved',
+    description: 'Service completion',
     color: 'text-secondary'
   },
   { 
-    label: 'Satisfaction', 
-    value: '4.8/5', 
-    change: '+0.3', 
+    label: 'Customer Retention', 
+    value: '78%', 
+    change: '+5%', 
     icon: Users,
-    description: 'Investor feedback',
+    description: 'Return customers',
     color: 'text-warning'
   },
 ];
 
-const queryVolumeData = [
-  { name: 'Financial', value: 35, color: 'hsl(var(--primary))' },
-  { name: 'ESG', value: 25, color: 'hsl(var(--success))' },
-  { name: 'Strategy', value: 20, color: 'hsl(var(--secondary))' },
-  { name: 'Governance', value: 12, color: 'hsl(var(--warning))' },
-  { name: 'Other', value: 8, color: 'hsl(var(--muted-foreground))' },
+const serviceVolumeData = [
+  { name: 'Oil Change', value: 29, color: 'hsl(var(--primary))' },
+  { name: 'Tires', value: 18, color: 'hsl(var(--success))' },
+  { name: 'Brakes', value: 15, color: 'hsl(var(--secondary))' },
+  { name: 'Diagnostics', value: 13, color: 'hsl(var(--warning))' },
+  { name: 'Other', value: 25, color: 'hsl(var(--muted-foreground))' },
 ];
 
-const responseTimeData = [
-  { day: 'Mon', ai: 1.2, manual: 45 },
-  { day: 'Tue', ai: 1.4, manual: 52 },
-  { day: 'Wed', ai: 1.1, manual: 38 },
-  { day: 'Thu', ai: 1.3, manual: 48 },
-  { day: 'Fri', ai: 1.5, manual: 55 },
-  { day: 'Sat', ai: 1.2, manual: 42 },
-  { day: 'Sun', ai: 1.1, manual: 35 },
+const serviceTimeData = [
+  { day: 'Mon', actual: 1.8, estimated: 2.0 },
+  { day: 'Tue', actual: 1.6, estimated: 2.0 },
+  { day: 'Wed', actual: 1.9, estimated: 2.0 },
+  { day: 'Thu', actual: 1.7, estimated: 2.0 },
+  { day: 'Fri', actual: 2.1, estimated: 2.0 },
+  { day: 'Sat', actual: 1.5, estimated: 2.0 },
 ];
 
-const commonQuestionsData = [
-  { question: 'Revenue Growth', count: 156 },
-  { question: 'Dividend Policy', count: 134 },
-  { question: 'ESG Initiatives', count: 98 },
-  { question: 'Market Outlook', count: 87 },
-  { question: 'M&A Strategy', count: 72 },
+const topServicesData = [
+  { service: 'Oil Change', revenue: 25650 },
+  { service: 'Brake Service', revenue: 53400 },
+  { service: 'Tire Service', revenue: 32250 },
+  { service: 'Diagnostics', revenue: 15600 },
+  { service: 'A/C Service', revenue: 17800 },
 ];
 
 const monthlyTrends = [
-  { month: 'Jul', queries: 2400, resolved: 2280 },
-  { month: 'Aug', queries: 2800, resolved: 2660 },
-  { month: 'Sep', queries: 3200, resolved: 3040 },
-  { month: 'Oct', queries: 3600, resolved: 3420 },
-  { month: 'Nov', queries: 3100, resolved: 2945 },
-  { month: 'Dec', queries: 2900, resolved: 2755 },
+  { month: 'Jul', services: 980, revenue: 280 },
+  { month: 'Aug', services: 1050, revenue: 320 },
+  { month: 'Sep', services: 1120, revenue: 380 },
+  { month: 'Oct', services: 1080, revenue: 410 },
+  { month: 'Nov', services: 1150, revenue: 450 },
+  { month: 'Dec', services: 1180, revenue: 485 },
 ];
 
 export default function Analytics() {
   const [dateRange, setDateRange] = useState('30d');
-  const [category, setCategory] = useState('all');
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Analytics Dashboard</h1>
+          <h1 className="text-3xl font-bold mb-2">Service Analytics</h1>
           <p className="text-muted-foreground">
-            Monitor platform performance, query analytics, and ROI metrics.
+            Monitor service performance, revenue metrics, and operational efficiency.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -163,17 +160,17 @@ export default function Analytics() {
 
       {/* Charts Row 1 */}
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        {/* Query Volume by Category */}
+        {/* Service Volume by Type */}
         <div className="bg-card rounded-xl p-6 border border-border/50">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-primary" />
-            Query Volume by Category
+            <Wrench className="w-5 h-5 text-primary" />
+            Service Volume by Type
           </h3>
           <div className="flex items-center">
             <ResponsiveContainer width="50%" height={200}>
               <PieChart>
                 <Pie
-                  data={queryVolumeData}
+                  data={serviceVolumeData}
                   cx="50%"
                   cy="50%"
                   innerRadius={50}
@@ -181,7 +178,7 @@ export default function Analytics() {
                   paddingAngle={2}
                   dataKey="value"
                 >
-                  {queryVolumeData.map((entry, index) => (
+                  {serviceVolumeData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -195,7 +192,7 @@ export default function Analytics() {
               </PieChart>
             </ResponsiveContainer>
             <div className="flex-1 space-y-2">
-              {queryVolumeData.map((item) => (
+              {serviceVolumeData.map((item) => (
                 <div key={item.name} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
@@ -208,14 +205,14 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* Response Time Comparison */}
+        {/* Service Time Efficiency */}
         <div className="bg-card rounded-xl p-6 border border-border/50">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <Clock className="w-5 h-5 text-primary" />
-            Response Time (seconds)
+            Avg. Service Time (hours)
           </h3>
           <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={responseTimeData}>
+            <BarChart data={serviceTimeData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
               <XAxis dataKey="day" className="text-xs" />
               <YAxis className="text-xs" />
@@ -227,8 +224,8 @@ export default function Analytics() {
                 }}
               />
               <Legend />
-              <Bar dataKey="ai" name="AI Response" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="manual" name="Manual (avg)" fill="hsl(var(--muted-foreground))" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="actual" name="Actual" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="estimated" name="Estimated" fill="hsl(var(--muted-foreground))" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -236,25 +233,26 @@ export default function Analytics() {
 
       {/* Charts Row 2 */}
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
-        {/* Common Questions */}
+        {/* Revenue by Service */}
         <div className="bg-card rounded-xl p-6 border border-border/50">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-primary" />
-            Top Query Topics
+            Revenue by Service Type
           </h3>
           <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={commonQuestionsData} layout="vertical">
+            <BarChart data={topServicesData} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-              <XAxis type="number" className="text-xs" />
-              <YAxis dataKey="question" type="category" className="text-xs" width={100} />
+              <XAxis type="number" className="text-xs" tickFormatter={(value) => `$${(value/1000).toFixed(0)}K`} />
+              <YAxis dataKey="service" type="category" className="text-xs" width={80} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: 'hsl(var(--card))',
                   border: '1px solid hsl(var(--border))',
                   borderRadius: '8px'
                 }}
+                formatter={(value: number) => [`$${value.toLocaleString()}`, 'Revenue']}
               />
-              <Bar dataKey="count" fill="hsl(var(--secondary))" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="revenue" fill="hsl(var(--secondary))" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -263,13 +261,14 @@ export default function Analytics() {
         <div className="bg-card rounded-xl p-6 border border-border/50">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-primary" />
-            Monthly Query Trends
+            Monthly Performance
           </h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={monthlyTrends}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
               <XAxis dataKey="month" className="text-xs" />
-              <YAxis className="text-xs" />
+              <YAxis yAxisId="left" className="text-xs" />
+              <YAxis yAxisId="right" orientation="right" className="text-xs" />
               <Tooltip
                 contentStyle={{
                   backgroundColor: 'hsl(var(--card))',
@@ -278,39 +277,39 @@ export default function Analytics() {
                 }}
               />
               <Legend />
-              <Line type="monotone" dataKey="queries" name="Total Queries" stroke="hsl(var(--primary))" strokeWidth={2} />
-              <Line type="monotone" dataKey="resolved" name="Auto-Resolved" stroke="hsl(var(--success))" strokeWidth={2} />
+              <Line yAxisId="left" type="monotone" dataKey="services" name="Services" stroke="hsl(var(--primary))" strokeWidth={2} />
+              <Line yAxisId="right" type="monotone" dataKey="revenue" name="Revenue ($K)" stroke="hsl(var(--success))" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* ROI Summary */}
+      {/* Performance Summary */}
       <div className="bg-card rounded-xl p-6 border border-border/50">
         <h3 className="font-semibold mb-6 flex items-center gap-2">
           <DollarSign className="w-5 h-5 text-primary" />
-          ROI Summary
+          Performance Summary
         </h3>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="p-4 rounded-xl bg-muted/30">
-            <p className="text-sm text-muted-foreground mb-1">Hours Saved Monthly</p>
-            <p className="text-2xl font-bold">1,240</p>
-            <p className="text-xs text-success mt-1">~$124,000 value</p>
+            <p className="text-sm text-muted-foreground mb-1">Services This Month</p>
+            <p className="text-2xl font-bold">1,180</p>
+            <p className="text-xs text-success mt-1">+18% vs last month</p>
           </div>
           <div className="p-4 rounded-xl bg-muted/30">
-            <p className="text-sm text-muted-foreground mb-1">Queries Automated</p>
-            <p className="text-2xl font-bold">8,945</p>
-            <p className="text-xs text-success mt-1">89% automation rate</p>
+            <p className="text-sm text-muted-foreground mb-1">Avg. Ticket Value</p>
+            <p className="text-2xl font-bold">$287</p>
+            <p className="text-xs text-success mt-1">+$23 vs last month</p>
           </div>
           <div className="p-4 rounded-xl bg-muted/30">
-            <p className="text-sm text-muted-foreground mb-1">Compliance Issues Caught</p>
-            <p className="text-2xl font-bold">47</p>
-            <p className="text-xs text-success mt-1">100% detection rate</p>
+            <p className="text-sm text-muted-foreground mb-1">Labor Hours Used</p>
+            <p className="text-2xl font-bold">1,680</p>
+            <p className="text-xs text-success mt-1">92% utilization</p>
           </div>
           <div className="p-4 rounded-xl bg-muted/30">
-            <p className="text-sm text-muted-foreground mb-1">Reports Generated</p>
-            <p className="text-2xl font-bold">156</p>
-            <p className="text-xs text-success mt-1">Avg. 15 min saved each</p>
+            <p className="text-sm text-muted-foreground mb-1">Parts Sold</p>
+            <p className="text-2xl font-bold">3,420</p>
+            <p className="text-xs text-success mt-1">$89K in parts revenue</p>
           </div>
         </div>
       </div>
